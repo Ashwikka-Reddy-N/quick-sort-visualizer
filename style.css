@@ -1,0 +1,113 @@
+body {
+    font-family: Arial;
+    background: #eef2f7;
+    text-align: center;
+}
+
+.panel {
+    background: white;
+    padding: 20px;
+    margin: 20px auto;
+    width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+#array {
+    display: flex;
+    align-items: flex-end;
+    height: 350px;
+    width: 60%;
+}
+
+.bar {
+    flex: 1;
+    margin: 0 2px;
+    background: #4da6ff;
+    transition: height 0.3s ease, box-shadow 0.2s ease, opacity 0.2s;
+}
+
+.bar.active {
+    background: red;
+    box-shadow: 0 0 10px red;
+}
+
+.bar.pivot {
+    background: purple;
+    box-shadow: 0 0 15px purple;
+}
+
+.bar.sorted {
+    background: green;
+    box-shadow: 0 0 10px green;
+}
+
+/* PSEUDOCODE */
+.pseudo {
+    background: #1e1e1e;
+    color: white;
+    padding: 15px;
+    margin-right: 20px;
+    border-radius: 10px;
+    width: 300px;
+    text-align: left;
+}
+
+.pseudo span {
+    display: block;
+    padding: 4px;
+}
+
+.active-line {
+    background: yellow;
+    color: black;
+    border-radius: 5px;
+}
+
+/* LEGEND */
+.legend {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 10px;
+}
+
+.box {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.blue { background: #4da6ff; }
+.red { background: red; }
+.purple { background: purple; }
+.green { background: green; }
+
+/* INFO */
+.recursion, .complexity {
+    background: white;
+    margin: 20px auto;
+    padding: 15px;
+    width: 350px;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+/* TREE */
+.tree {
+    background: #1e1e1e;
+    color: #00ffcc;
+    margin: 20px auto;
+    padding: 15px;
+    width: 400px;
+    border-radius: 10px;
+    text-align: left;
+    font-family: monospace;
+}
