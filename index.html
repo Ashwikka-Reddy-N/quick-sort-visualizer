@@ -2,12 +2,10 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>⚡ Quick Sort Visualizer</title>
+    <title>⚡ Sorting Visualizer</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<h1>⚡ Quick Sort Visualizer</h1>
 
 <div class="panel">
     <label>Array Size:</label>
@@ -19,12 +17,21 @@
 
     <br><br>
 
+    <label>Algorithm:</label>
+    <select id="algo">
+        <option value="quick">Quick Sort</option>
+        <option value="bubble">Bubble Sort</option>
+        <option value="selection">Selection Sort</option>
+        <option value="insertion">Insertion Sort</option>
+    </select>
+
+    <br><br>
+
     <button onclick="generateArray()">Generate</button>
     <button onclick="useInput()">Use Input</button>
     <button onclick="startSort()">Visualize</button>
 </div>
 
-<!-- LEGEND -->
 <div class="legend">
     <span><div class="box blue"></div> Normal</span>
     <span><div class="box red"></div> Comparing</span>
@@ -33,8 +40,6 @@
 </div>
 
 <div class="main">
-
-    <!-- PSEUDOCODE -->
     <div class="pseudo">
         <h3>Pseudocode</h3>
         <pre>
@@ -46,31 +51,26 @@
         </pre>
     </div>
 
-    <!-- ARRAY -->
     <div id="array"></div>
-
 </div>
 
-<!-- RECURSION INFO -->
 <div class="recursion">
     <h3>Recursion Flow</h3>
     <p id="range">-</p>
     <p id="depth">Depth: 0</p>
 </div>
 
-<!-- TREE -->
 <div class="tree">
     <h3>Recursion Tree</h3>
     <pre id="treeView"></pre>
 </div>
 
-<!-- COMPLEXITY -->
 <div class="complexity">
-    <h3>Quick Sort Complexity</h3>
-    <p><b>Best Case:</b> O(n log n)</p>
-    <p><b>Average Case:</b> O(n log n)</p>
-    <p><b>Worst Case:</b> O(n²)</p>
-    <p><b>Space Complexity:</b> O(log n)</p>
+    <h3>Sorting Complexity</h3>
+    <p><b>Quick:</b> O(n log n)</p>
+    <p><b>Bubble:</b> O(n²)</p>
+    <p><b>Selection:</b> O(n²)</p>
+    <p><b>Insertion:</b> O(n²)</p>
 </div>
 
 <audio id="swapSound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
