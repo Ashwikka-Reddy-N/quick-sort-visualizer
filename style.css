@@ -1,113 +1,207 @@
-body {
-    font-family: Arial;
-    background: #eef2f7;
-    text-align: center;
+let array = [];
+let delay = 50;
+let treeText = "";
+
+function generateArray() {
+    let size = parseInt(document.getElementById("size").value);
+
+    if (isNaN(size) || size < 5 || size > 100) {
+        alert("Enter size between 5 and 100");
+        return;
+    }
+
+    array = [];
+    for (let i = 0; i < size; i++) {
+        array.push(Math.floor(Math.random() * 300) + 20);
+    }
+
+    renderArray();
 }
 
-.panel {
-    background: white;
-    padding: 20px;
-    margin: 20px auto;
-    width: 400px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+function useInput() {
+    const input = document.getElementById("inputArray").value;
+    const values = input.split(",").map(Number);
+
+    if (values.some(isNaN)) {
+        alert("Invalid input!");
+        return;
+    }
+
+    array = values;
+    renderArray();
 }
 
-.main {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+function renderArray() {
+    const container = document.getElementById("array");
+    container.innerHTML = "";
+
+    let max = Math.max(...array);
+
+    array.forEach(val => {
+        const bar = document.createElement("div");
+        bar.style.height = (val / max) * 300 + "px";
+        bar.classList.add("bar");
+        container.appendChild(bar);
+    });
 }
 
-#array {
-    display: flex;
-    align-items: flex-end;
-    height: 350px;
-    width: 60%;
+function updateBars(bars) {
+    let max = Math.max(...array);
+    for (let i = 0; i < bars.length; i++) {
+        bars[i].style.height = (array[i] / max) * 300 + "px";
+    }
 }
 
-.bar {
-    flex: 1;
-    margin: 0 2px;
-    background: #4da6ff;
-    transition: height 0.3s ease, box-shadow 0.2s ease, opacity 0.2s;
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-.bar.active {
-    background: red;
-    box-shadow: 0 0 10px red;
+function swap(i, j) {
+    [array[i], array[j]] = [array[j], array[i]];
+    document.getElementById("swapSound").play();
 }
 
-.bar.pivot {
-    background: purple;
-    box-shadow: 0 0 15px purple;
+function markAllSorted() {
+    document.querySelectorAll(".bar").forEach(b => b.classList.add("sorted"));
 }
 
-.bar.sorted {
-    background: green;
-    box-shadow: 0 0 10px green;
+async function startSort() {
+    treeText = "";
+    let algo = document.getElementById("algo").value;
+
+    if (algo === "quick") {
+        await quickSort(0, array.length - 1, 0);
+    } else if (algo === "bubble") {
+        await bubbleSort();
+    } else if (algo === "selection") {
+        await selectionSort();
+    } else {
+        await insertionSort();
+    }
+
+    markAllSorted();
 }
 
-/* PSEUDOCODE */
-.pseudo {
-    background: #1e1e1e;
-    color: white;
-    padding: 15px;
-    margin-right: 20px;
-    border-radius: 10px;
-    width: 300px;
-    text-align: left;
+//////////////// QUICK SORT //////////////////
+
+async function quickSort(low, high, depth) {
+    if (low < high) {
+        let pi = await partition(low, high);
+        await quickSort(low, pi - 1, depth + 1);
+        await quickSort(pi + 1, high, depth + 1);
+    }
 }
 
-.pseudo span {
-    display: block;
-    padding: 4px;
+async function partition(low, high) {
+    let bars = document.querySelectorAll(".bar");
+    let pivot = array[high];
+
+    bars[high].classList.add("pivot");
+
+    let i = low - 1;
+
+    for (let j = low; j < high; j++) {
+        bars[j].classList.add("active");
+        await sleep(delay);
+
+        if (array[j] < pivot) {
+            i++;
+            swap(i, j);
+            updateBars(bars);
+        }
+
+        bars[j].classList.remove("active");
+    }
+
+    swap(i + 1, high);
+    updateBars(bars);
+
+    bars[i + 1].classList.add("sorted");
+
+    return i + 1;
 }
 
-.active-line {
-    background: yellow;
-    color: black;
-    border-radius: 5px;
+//////////////// BUBBLE //////////////////
+
+async function bubbleSort() {
+    let bars = document.querySelectorAll(".bar");
+
+    for (let i = 0; i < array.length; i++) {
+        for (let j = 0; j < array.length - i - 1; j++) {
+
+            bars[j].classList.add("active");
+            bars[j + 1].classList.add("active");
+
+            await sleep(delay);
+
+            if (array[j] > array[j + 1]) {
+                swap(j, j + 1);
+                updateBars(bars);
+            }
+
+            bars[j].classList.remove("active");
+            bars[j + 1].classList.remove("active");
+        }
+
+        bars[array.length - i - 1].classList.add("sorted");
+    }
 }
 
-/* LEGEND */
-.legend {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 10px;
+//////////////// SELECTION //////////////////
+
+async function selectionSort() {
+    let bars = document.querySelectorAll(".bar");
+
+    for (let i = 0; i < array.length; i++) {
+        let min = i;
+
+        for (let j = i + 1; j < array.length; j++) {
+            bars[j].classList.add("active");
+            await sleep(delay);
+
+            if (array[j] < array[min]) {
+                min = j;
+            }
+
+            bars[j].classList.remove("active");
+        }
+
+        swap(i, min);
+        updateBars(bars);
+
+        bars[i].classList.add("sorted");
+    }
 }
 
-.box {
-    width: 15px;
-    height: 15px;
-    display: inline-block;
-    margin-right: 5px;
+//////////////// INSERTION //////////////////
+
+async function insertionSort() {
+    let bars = document.querySelectorAll(".bar");
+
+    for (let i = 1; i < array.length; i++) {
+        let key = array[i];
+        let j = i - 1;
+
+        while (j >= 0 && array[j] > key) {
+
+            bars[j].classList.add("active");
+            bars[j + 1].classList.add("active");
+
+            await sleep(delay);
+
+            array[j + 1] = array[j];
+            j--;
+
+            updateBars(bars);
+
+            bars[j + 1].classList.remove("active");
+        }
+
+        array[j + 1] = key;
+        updateBars(bars);
+
+        bars[i].classList.add("sorted");
+    }
 }
 
-.blue { background: #4da6ff; }
-.red { background: red; }
-.purple { background: purple; }
-.green { background: green; }
-
-/* INFO */
-.recursion, .complexity {
-    background: white;
-    margin: 20px auto;
-    padding: 15px;
-    width: 350px;
-    border-radius: 10px;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-}
-
-/* TREE */
-.tree {
-    background: #1e1e1e;
-    color: #00ffcc;
-    margin: 20px auto;
-    padding: 15px;
-    width: 400px;
-    border-radius: 10px;
-    text-align: left;
-    font-family: monospace;
-}
+generateArray();
